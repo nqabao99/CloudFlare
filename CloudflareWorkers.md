@@ -1,57 +1,36 @@
 # Tìm hiểu Cloudflare Workers
 
-## 1. Cloudflare là gì?
+![Cloudflare](https://blog-cloudflare-com-assets.storage.googleapis.com/2020/07/Workers-handshake-after@2x.png)
 
-![Cloudflare](https://wiki.tino.org/wp-content/uploads/2019/01/co-nen-su-dung-cloudflare-cho-website-hay-khong.png)
+## 1. Cloudflare Workers là gì?
 
-- CloudFlare là dịch vụ DNS trung gian, giúp điều phối lượng truy cập giữa máy chủ và các client qua lớp bảo vệ CloudFlare.
+- Cloudflare Workers giúp triển khai mã severless ngay lập tức trên toàn cầu, có hiệu suất cao, ổn định và dễ dàng mở rộng.
 
-- Cloudflare là một nhà cung cấp cơ sở hạ tầng Internet, với ý tưởng là tăng cường bảo mật, hiệu suất và độ tin cậy của bất kỳ thứ gì được kết nối với Internet. Cloudflar cung cấp hầu hết các tính năng cốt lõi miễn phí và cung cấp cũng như thiết lập đơn giản để cài đặt và sử dụng nó. Cloudflare có cả giao diện người dùng và API để quản lý website của bạn.
+- Cloudflare Worker mới chỉ support: Javascript, C, C++, Rust.
 
-- Cloudflare hoạt động trên mô hình Freemium nhưng cung cấp miễn phí hầu hết các tính năng cốt lõi của nó với một số giới hạn.
+- Cloudflare Worker chạy trên cùng một mạng đám mây toàn cầu gồm hơn 165 trung tâm dữ liệu cung cấp cho các dịch vụ củ nó. Cloudflare worker là một dịch vụ cung cấp môi trường thực thi JavaScript nhẹ để tăng cường các ứng dụng hiện có hoặc tạo các ứng dụng mới.
 
-## 2. Các tính năng của Cloudflare:
+![Cloudflare Workers](https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/317d6aa0-0c30-462f-b19e-7958375f941b/cloudflare-network-map.jpg)
 
-- Lưu trữ DNS: DNS chịu trách nhiệm dịch tên miền thành địa chỉ IP, Cloudflare cung cấp dịch vụ lưu trữ DNS để quản lý các bản ghi DNS và các bản ghi Cloudflare có hiệu lực rất nhanh trong hầu hết các trường hợp.
+## 2. Các ưu điểm
 
-- CDN: Mạng cung cấp nội dung là một dịch vụ lưu trữ trang web của bạn và phục vụ trang web từ máy chủ gần nhất về mặt địa lý, do đó làm tăng tốc độ tải của trang web.
+- Tự động mở rộng: không cần phải lo lắng về vấn đề cấu hình tự động mở rộng nữa, bao gồm cả cân bằng tải (load balancers), hay trả phí cho tài nguyên không sử dụng. Lưu lượng truy cập được định tuyến tự động và cân bằng tải thông qua hàng ngàn máy chủ của Cloudflare. Các đoạn mã mở rộng dễ dàng mà không cần lo lắng.
 
-- SSL/TLS: Cloudflare cung cấp SSL miễn phí cho tên miền và các tên miền phụ ký tự đại diện cho cấp 3 trong tên máy chủ miễn phí
+- Mạng toàn cầu có hiệu suất cao: mỗi triển khai được thực hiện trên mạng trung tâm dữ liệu chạy trên V8 đã được cô lập. Các đoạn mã được mạng lưới của Cloudflare hỗ trợ, các mạng này thường chỉ cách người dùng có vài mili giây.
 
-- Tường lửa: Giới hạn trong 5 quy tắc Tường lửa Cloudflare cung cấp một cách để chặn lưu lượng truy cập bằng địa chỉ IP, tên máy chủ, các bot đã biết, URI,...
+- Khởi động 0ms: hầu hết các nền tảng severless cần khởi động nguội (cold start) mỗi khi triển khai hoặc dịch vụ gia tăng trong cộng đồng. Cloudflare Worker có thể chạy đoạn mã ngay lập tức, mà không cần khởi động.
 
-- Page rules: Giới hạn trong 3 quy tắc Page rules cung cấp các chức năng khác nhau như chuyển hướng, ghi lại HTTPS và hơn thế nữa.
+- Giá cả phải chăng: 100 ngàn yêu cầu đầu tiên mỗi ngày đều miễn phí, và gói trả phí có giá chỉ 5$ trên 10 triệu yêu cầu, điều này giúp cho Cloudflare Worker có giá rẻ hơn so với các nền tảng serverless khác.
 
-- Ứng dụng: Được tạo bởi các nhà phát triển, các ứng dụng Cloudflare cung cấp các chức năng khác nhau chỉ bằng một cú nhấp chuột.
+- Không phải lo bảo trì máy chủ: chúng ta sẽ có thời gian dành cho việc xây dựng do bớt được thời gian cấu hình, không cần VM, không cần máy chủ, và không bao gồm cả việc quản lý. Triển khai thông qua việc sử dụng CLI hoặc giao diện web.
 
-- Analytics: Analytics Cloudflare cung cấp các phân tích đơn giản cho website của bạn
+- Tài nguyên tĩnh có hiệu suất động: Khai thác sức mạnh vô song của các máy chủ biên để tạo ra các ảnh, SVG, PDF, hay bất cứ thứ gì mà người dùng cần một cách nhanh chóng, và phân phối chúng cho người dùng nhanh nhất có thể như một dạng tài nguyên tĩnh.
 
-- Domain registrar: Cloudflare cung cấp đăng ký miền với giá bán buôn với Whois redaction miễn phí
+- Lưu trữ biên được tích hợp sẵn: lưu trữ các tài nguyên tĩnh tại máy chủ biên với Workers KV, trên các trung tâm dữ liệu toàn cầu, độ trễ thấp. Truy cập vào tài nguyên, cùng với mã của chúng ta và chuyển đổi chúng thông qua API mạnh mẽ, để chỉnh sửa trang của chúng ta trước khi nó đến được với người dùng.
 
-- Workers: Các chức năng serverless chạy bằng các ngôn ngữ như JavaScript, C, C ++ và Rust.
+## 3. Các nhược điểm
 
-## 3. Các ưu điểm
-
-- Cloudflare có một gói miễn phí với hầu hết các tính năng cốt lõi của nó.
-
-- Nó hoạt động như CDN giúp tăng tốc độ tải trang web.
-
-- Cloudflare bảo vệ khỏi các chương trình độc hại và các cuộc tấn công DDoS.
-
-- Nó cung cấp DNS được quản lý với TTL ngắn.
-
-- Nó cung cấp chứng chỉ SSL miễn phí hoàn toàn do Cloudflare quản lý, được gia hạn hàng năm.
-- Cloudflare cung cấp các quy tắc chuyển tiếp và các chức năng không cần máy chủ.
-
-- Cloudflare có các phần bổ trợ độc lập khác nhau cho các dịch vụ khác nhau.
-
-- Cloudflare cung cấp dịch vụ đăng ký tên miền.
-
-- Cung cấp API để quản lý hầu hết các dịch vụ.
-
-## 4. Các nhược điểm
-
-- Gói miễn phí có nhiều giới hạn và gói trả phí không hề rẻ.
+- Gói miễn phí có nhiều giới hạn.
 
 - Các vùng DNS được quản lý có thể không hữu ích đối với một số người dùng.
 
